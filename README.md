@@ -82,6 +82,7 @@ Um serviço orquestrador central controla o fluxo das etapas, enviando comandos 
 - Maven 3.x
 - Docker (para rodar o LocalStack, que simula AWS SQS localmente)
 - AWS CLI configurado (opcional, para usar SQS real na nuvem)
+- .
 
 ### Passos para execução local
 - Clone o repositório
