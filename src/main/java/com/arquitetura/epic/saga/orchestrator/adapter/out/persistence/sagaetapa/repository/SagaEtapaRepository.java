@@ -1,0 +1,11 @@
+package com.arquitetura.epic.saga.orchestrator.adapter.out.persistence.sagaetapa.repository;
+
+import com.arquitetura.epic.saga.orchestrator.adapter.out.persistence.sagaetapa.entity.SagaEtapaEntity;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import java.util.UUID;
+
+@Repository
+public interface SagaEtapaRepository extends JpaRepository<SagaEtapaEntity, UUID> {
+}

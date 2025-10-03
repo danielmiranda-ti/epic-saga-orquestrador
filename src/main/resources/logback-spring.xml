@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <!-- Carrega o nome da aplicação do application.yml -->
+    <springProperty scope="context" name="appName" source="spring.application.name" defaultValue="app" />
+
+    <!-- Diretório e arquivo de log -->
+    <property name="LOG_PATH" value="../logs" />
+    <property name="LOG_FILE" value="${LOG_PATH}/${appName}-app.log" />
+
+    <!-- Formato de log -->
+    <property name="LOG_PATTERN"
+              value="%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %logger{36} - %X{correlationId} - %msg%n"/>
+
+    <!-- Console: mostra tudo -->
+    <appender name="Console" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${appName} - ${LOG_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <!-- FileAppender: só logs da sua aplicação -->
+    <appender name="FileAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_FILE}</file>
+        <encoder>
+            <pattern>${appName} - ${LOG_PATTERN}</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_PATH}/${appName}-app-%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>7</maxHistory>
+        </rollingPolicy>
+        <!-- Filtro: apenas logs do seu pacote -->
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>INFO</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+
+    <!-- Logger do seu pacote: envia para arquivo e console -->
+    <logger name="com.arquitetura.epic.saga.orchestrator.in" level="INFO" additivity="false">
+        <appender-ref ref="Console"/>
+        <appender-ref ref="FileAppender"/>
+    </logger>
+    <logger name="com.arquitetura.epic.saga.orchestrator.out" level="INFO" additivity="false">
+        <appender-ref ref="Console"/>
+        <appender-ref ref="FileAppender"/>
+    </logger>
+
+    <!-- Root logger: só console -->
+    <root level="INFO">
+        <appender-ref ref="Console"/>
+    </root>
+
+</configuration>

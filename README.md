@@ -76,19 +76,49 @@ Um serviço orquestrador central controla o fluxo das etapas, enviando comandos 
 
 ## Como Rodar o Projeto
 
+Esse projeto contem os scripts para subir toda a infra de padrao de saga.
+
 ### Pré-requisitos
 
 - Java 17 (ou versão compatível)
 - Maven 3.x
-- Docker (para rodar o LocalStack, que simula AWS SQS localmente)
-- AWS CLI configurado (opcional, para usar SQS real na nuvem)
-- .
+- Docker 
+- Docker Compose
 
 ### Passos para execução local
 - Clone o repositório
-- Inicie o LocalStack para simular o SQS local
-- Configure as variáveis de ambiente para apontar para o LocalStack
-- Compile e execute o serviço
+- Compile o projeto
+- Execute o script `start-kafka.sh`  
+  - esse script irá baixar as dependências do kafka e criar todos os tópicos necessários para essa saga
+- Clone, compile e start todos os projetos:
+
+    - alsdkf 
+    - asldfkadlf
+
+- Execute o start para testar os cenários:
+
+Cenário de sucesso:
+```shell 
+curl --request POST \
+  --url http://localhost:8082/api/v1/onboarding/start \
+  --header 'content-type: application/json' \
+  --header 'x-correlation-id: sucesso-vendedor-63' \
+  --data '{
+  "id": "8",
+  "name": "Vendor teste"
+}'
+```
+
+Cenário de falha no preço
+
+```shell
+
+```
+
+para filtrar os dados use o comando 
+```shell
+tail -f *.log | grep sucesso-vendedor-63
+```
 
 ### Executando os testes automatizados
 
