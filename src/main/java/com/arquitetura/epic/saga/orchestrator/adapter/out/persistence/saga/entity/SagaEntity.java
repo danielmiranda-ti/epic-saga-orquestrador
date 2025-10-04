@@ -1,6 +1,6 @@
 package com.arquitetura.epic.saga.orchestrator.adapter.out.persistence.saga.entity;
 
-import com.arquitetura.epic.saga.orchestrator.adapter.out.persistence.sagaetapa.entity.SagaEtapaEntity;
+import com.arquitetura.epic.saga.orchestrator.adapter.out.persistence.sagaetapa.entity.EtapaSagaEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -22,7 +22,7 @@ public class SagaEntity {
     private UUID id;
 
     @Column(nullable = false)
-    private UUID vendedorId;
+    private UUID solicitacaoId;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -35,7 +35,7 @@ public class SagaEntity {
 
     @Builder.Default
     @OneToMany(mappedBy = "saga", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<SagaEtapaEntity> etapas = new ArrayList<>();
+    private List<EtapaSagaEntity> etapas = new ArrayList<>();
 
     // método utilitário para adicionar etapa
 //    public void adicionarEtapa(SagaEtapaEntity etapa) {

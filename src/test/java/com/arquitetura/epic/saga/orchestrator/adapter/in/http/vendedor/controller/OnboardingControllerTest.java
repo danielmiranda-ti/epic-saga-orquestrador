@@ -1,9 +1,9 @@
 package com.arquitetura.epic.saga.orchestrator.adapter.in.http.vendedor.controller;
 
 import com.arquitetura.epic.saga.orchestrator.adapter.in.http.vendedor.dtos.mappers.VendedorMapper;
-import com.arquitetura.epic.saga.orchestrator.adapter.in.http.vendedor.dtos.request.VendedorDTO;
-import com.arquitetura.epic.saga.orchestrator.adapter.in.http.vendedor.dtos.response.VendedorResponseDTO;
-import com.arquitetura.epic.saga.orchestrator.core.domain.model.in.Vendedor;
+import com.arquitetura.epic.saga.orchestrator.adapter.in.http.vendedor.dtos.request.SolicitacaoDTO;
+import com.arquitetura.epic.saga.orchestrator.adapter.in.http.vendedor.dtos.response.SolicitacaoResponseDTO;
+import com.arquitetura.epic.saga.orchestrator.core.domain.model.in.Solicitacao;
 import com.arquitetura.epic.saga.orchestrator.core.port.in.onboarding.OnboardingVendedorPort;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,24 +27,25 @@ class OnboardingControllerTest {
     @Test
     void startOnboarding_deveRetornarResponseComStatusIniciado() {
         // Arrange
-        VendedorDTO vendedorDTO = new VendedorDTO();
-        Vendedor vendedor = Vendedor.builder().build();
-        VendedorResponseDTO responseDTO = new VendedorResponseDTO();
-        responseDTO.setVendedorId("123");
+        SolicitacaoDTO vendedorDTO = new SolicitacaoDTO();
+        Solicitacao vendedor = Solicitacao.builder().build();
+        SolicitacaoResponseDTO responseDTO = new SolicitacaoResponseDTO();
+        responseDTO.setSolicitacaoId("123");
 
         when(mapper.toDomain(vendedorDTO)).thenReturn(vendedor);
         when(mapper.toResponseDTO(vendedor)).thenReturn(responseDTO);
+        when(onboardingVendedorPort.startSaga(vendedor)).thenReturn("INICIADO");
 
         // Act
-        VendedorResponseDTO result = controller.startOnboarding(vendedorDTO);
+        SolicitacaoResponseDTO result = controller.startOnboarding(vendedorDTO);
 
         // Assert
         verify(onboardingVendedorPort).startSaga(vendedor);
         verify(mapper).toDomain(vendedorDTO);
         verify(mapper).toResponseDTO(vendedor);
 
-        assertEquals("123", result.getVendedorId());
-        assertEquals("ONBOARDING_INICIADO", result.getStatus());
+        assertEquals("123", result.getSolicitacaoId());
+        assertEquals("INICIADO", result.getStatus());
     }
 
 }

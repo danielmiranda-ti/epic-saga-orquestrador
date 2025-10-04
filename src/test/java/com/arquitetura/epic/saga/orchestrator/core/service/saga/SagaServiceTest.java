@@ -35,22 +35,20 @@ class SagaServiceTest {
     @Test
     void registrarSaga_shouldRegisterSagaAndEtapas_whenVendedorIsValid() {
         // Arrange
-        UUID vendedorId = UUID.randomUUID();
-        Vendedor vendedor = mock(Vendedor.class);
-        when(vendedor.getVendedorId()).thenReturn(vendedorId);
-        when(vendedor.getDadosJuridicos()).thenReturn(mock(DadosJuridicos.class));
-        when(vendedor.getDocumentos()).thenReturn(mock(List.class));
-        when(vendedor.getDadosBancarios()).thenReturn(mock(DadosBancarios.class));
-        when(vendedor.getDadosLoja()).thenReturn(mock(DadosLoja.class));
+        UUID solicitacaoId = UUID.randomUUID();
+        Solicitacao solicitacao = mock(Solicitacao.class);
+        when(solicitacao.getSolicitacaoId()).thenReturn(solicitacaoId);
+        when(solicitacao.getDadosJuridicos()).thenReturn(mock(DadosJuridicos.class));
+        when(solicitacao.getDadosBancarios()).thenReturn(mock(DadosBancarios.class));
 
         Saga saga = Saga.builder()
-                .vendedorId(vendedorId)
+                .solicitacaoId(solicitacaoId)
                 .status(StatusSagaEnum.EM_ANDAMENTO)
                 .etapasSaga(new ArrayList<>())
                 .build();
 
         Saga sagaPersistida = Saga.builder()
-                .vendedorId(vendedorId)
+                .solicitacaoId(solicitacaoId)
                 .status(StatusSagaEnum.EM_ANDAMENTO)
                 .etapasSaga(new ArrayList<>())
                 .build();
@@ -61,23 +59,23 @@ class SagaServiceTest {
         when(jsonUtil.toJson(any())).thenReturn("json");
 
         // Mock etapa saving
-        when(etapaSagaRepositoryPort.salvar(any(SagaEtapa.class)))
+        when(etapaSagaRepositoryPort.salvar(any(EtapaSaga.class)))
                 .thenAnswer(invocation -> {
-                    return invocation.<SagaEtapa>getArgument(0);
+                    return invocation.<EtapaSaga>getArgument(0);
                 });
 
         // Act
-        Saga result = sagaService.registrarSaga(vendedor);
+        Saga result = sagaService.registrarSaga(solicitacao);
 
         // Assert
         assertNotNull(result);
-        assertEquals(vendedorId, result.getVendedorId());
+        assertEquals(solicitacaoId, result.getSolicitacaoId());
         assertEquals(StatusSagaEnum.EM_ANDAMENTO, result.getStatus());
-        assertEquals(4, result.getEtapasSaga().size());
+        assertEquals(3, result.getEtapasSaga().size());
 
         verify(sagaRepositoryPort).salvar(any(Saga.class));
-        verify(etapaSagaRepositoryPort, times(4)).salvar(any(SagaEtapa.class));
-        verify(jsonUtil, times(4)).toJson(any());
+        verify(etapaSagaRepositoryPort, times(3)).salvar(any(EtapaSaga.class));
+        verify(jsonUtil, times(3)).toJson(any());
     }
 
     @Test
@@ -85,17 +83,17 @@ class SagaServiceTest {
         IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> {
             sagaService.registrarSaga(null);
         });
-        assertEquals("Vendedor ou vendedorId não pode ser nulo", ex.getMessage());
+        assertEquals("Solicitação não pode ser nula.", ex.getMessage());
     }
 
     @Test
     void registrarSaga_shouldThrowException_whenVendedorIdIsNull() {
-        Vendedor vendedor = mock(Vendedor.class);
-        when(vendedor.getVendedorId()).thenReturn(null);
+        Solicitacao vendedor = mock(Solicitacao.class);
+        when(vendedor.getSolicitacaoId()).thenReturn(null);
 
         IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> {
             sagaService.registrarSaga(vendedor);
         });
-        assertEquals("Vendedor ou vendedorId não pode ser nulo", ex.getMessage());
+        assertEquals("Solicitação não pode ser nula.", ex.getMessage());
     }
 }

@@ -14,7 +14,7 @@ public class Saga {
 
     private UUID id;
 
-    private UUID vendedorId;
+    private UUID solicitacaoId;
 
     private StatusSagaEnum status;
 
@@ -23,5 +23,5 @@ public class Saga {
     private LocalDateTime dataFim;
 
     @Builder.Default
-    private List<SagaEtapa> etapasSaga = new ArrayList<>();;
+    private List<EtapaSaga> etapasSaga = new ArrayList<>();;
 }

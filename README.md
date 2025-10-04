@@ -86,13 +86,14 @@ Esse projeto contem os scripts para subir toda a infra de padrao de saga.
 - Docker Compose
 
 ### Passos para execução local
+
 - Clone o repositório
 - Compile o projeto
 - Execute o script `start-kafka.sh`  
   - esse script irá baixar as dependências do kafka e criar todos os tópicos necessários para essa saga
-- Clone, compile e start todos os projetos:
+- Clone os demais repositórios que fazem parte dessa saga, compile e start todos os projetos:
 
-    - alsdkf 
+    - [Cadastro Juridico]() 
     - asldfkadlf
 
 - Execute o start para testar os cenários:
@@ -104,8 +105,56 @@ curl --request POST \
   --header 'content-type: application/json' \
   --header 'x-correlation-id: sucesso-vendedor-63' \
   --data '{
-  "id": "8",
-  "name": "Vendor teste"
+  "vendedorId": "d8aeb3c1-83ef-45d1-b6bc-28f6d502c8cb",
+  "dadosPessoais": {
+    "nomeCompleto": "João da Silva",
+    "cpfCnpj": "12345678901",
+    "email": "joao.silva@exemplo.com",
+    "telefone": "+55 11 91234-5678",
+    "endereco": {
+      "logradouro": "Rua das Flores",
+      "numero": "123",
+      "bairro": "Centro",
+      "cidade": "São Paulo",
+      "estado": "SP",
+      "cep": "01010-000"
+    }
+  },
+  "dadosJuridicos": {
+    "razaoSocial": "JS Comércio de Eletrônicos LTDA",
+    "cnpj": "12345678000199",
+    "inscricaoEstadual": "123.456.789.000",
+    "naturezaJuridica": "Sociedade Limitada"
+  },
+  "dadosBancarios": {
+    "banco": "Itaú",
+    "agencia": "1234",
+    "conta": "56789-0",
+    "tipoConta": "Corrente",
+    "titular": "JS Comércio de Eletrônicos LTDA"
+  },
+  "dadosLoja": {
+    "nomeFantasia": "Eletrônicos do João",
+    "categoriaPrincipal": "Eletrônicos",
+    "descricao": "Loja especializada em celulares e acessórios.",
+    "urlLoja": "https://eletronicosdojoao.com.br",
+    "politicaEntrega": "Entrega em até 7 dias úteis.",
+    "politicaDevolucao": "Devolução gratuita em até 30 dias."
+  },
+  "documentos": [
+    {
+      "tipo": "Contrato Social",
+      "url": "https://bucket-s3/documentos/contrato-social.pdf"
+    },
+    {
+      "tipo": "Comprovante de Endereço",
+      "url": "https://bucket-s3/documentos/comprovante-endereco.pdf"
+    }
+  ],
+  "metadados": {
+    "canalOrigem": "Portal Marketplace",
+    "dataSolicitacao": "2025-08-18T16:30:00Z"
+  }
 }'
 ```
 
@@ -114,6 +163,8 @@ Cenário de falha no preço
 ```shell
 
 ```
+
+### Filtrar os logs
 
 para filtrar os dados use o comando 
 ```shell

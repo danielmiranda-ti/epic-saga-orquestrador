@@ -1,5 +1,6 @@
 package com.arquitetura.epic.saga.orchestrator.infraestrutura.persistence;
 
+import jakarta.persistence.EntityManagerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.orm.jpa.JpaTransactionManager;
@@ -10,8 +11,8 @@ import org.springframework.transaction.PlatformTransactionManager;
 //import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
-@Configuration
-@EnableJpaRepositories(basePackages = "com.arquitetura.epic.saga.orchestrator.adapter.out.persistence")
+//@Configuration
+//@EnableJpaRepositories(basePackages = "com.arquitetura.epic.saga.orchestrator.adapter.out.persistence")
 public class JpaConfig {
 
     @Bean
@@ -23,8 +24,8 @@ public class JpaConfig {
         return em;
     }
 
-//    @Bean
-//    public PlatformTransactionManager transactionManager(EntityManagerFactory emf) {
-//        return new JpaTransactionManager(emf);
-//    }
+    @Bean
+    public PlatformTransactionManager transactionManager(EntityManagerFactory emf) {
+        return new JpaTransactionManager(emf);
+    }
 }

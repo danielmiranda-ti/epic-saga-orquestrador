@@ -6,7 +6,7 @@ import lombok.Data;
 public class DadosPessoaisDTO {
 
     private String nomeCompleto;
-    private String cpfCnpj;
+    private String documento;
     private String email;
     private String telefone;
     private EnderecoDTO endereco;

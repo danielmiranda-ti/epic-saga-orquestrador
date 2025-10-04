@@ -1,6 +1,6 @@
 package com.arquitetura.epic.saga.orchestrator.adapter.out.persistence.sagaetapa.adapter;
 
-import com.arquitetura.epic.saga.orchestrator.core.domain.model.out.SagaEtapa;
+import com.arquitetura.epic.saga.orchestrator.core.domain.model.out.EtapaSaga;
 import com.arquitetura.epic.saga.orchestrator.core.port.out.etapasaga.EtapaSagaRepositoryPort;
 import com.arquitetura.epic.saga.orchestrator.adapter.out.persistence.sagaetapa.mapper.SagaEtapaMapper;
 import com.arquitetura.epic.saga.orchestrator.adapter.out.persistence.sagaetapa.repository.SagaEtapaRepository;
@@ -18,14 +18,14 @@ public class EtapaSagaRepositoryAdapter implements EtapaSagaRepositoryPort {
     private final SagaEtapaMapper mapper;
 
     @Override
-    public SagaEtapa salvar(SagaEtapa sagaEtapa) {
+    public EtapaSaga salvar(EtapaSaga sagaEtapa) {
         var sagaEtapaEntity = mapper.toEntity(sagaEtapa);
         var etapa = sagaEtapaRepository.save(sagaEtapaEntity);
 
         return mapper.toDomain(etapa);
     }
 
-    public Optional<SagaEtapa> buscarPorId(String etapaId) {
+    public Optional<EtapaSaga> buscarPorId(String etapaId) {
         return sagaEtapaRepository.findById(UUID.fromString(etapaId))
                 .map(mapper::toDomain);
     }

@@ -1,9 +1,9 @@
 package com.arquitetura.epic.saga.orchestrator.adapter.in.http.vendedor.controller;
 
-import com.arquitetura.epic.saga.orchestrator.adapter.in.http.vendedor.dtos.response.VendedorResponseDTO;
+import com.arquitetura.epic.saga.orchestrator.adapter.in.http.vendedor.dtos.response.SolicitacaoResponseDTO;
 import com.arquitetura.epic.saga.orchestrator.core.port.in.onboarding.OnboardingVendedorPort;
 import com.arquitetura.epic.saga.orchestrator.adapter.in.http.vendedor.dtos.mappers.VendedorMapper;
-import com.arquitetura.epic.saga.orchestrator.adapter.in.http.vendedor.dtos.request.VendedorDTO;
+import com.arquitetura.epic.saga.orchestrator.adapter.in.http.vendedor.dtos.request.SolicitacaoDTO;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,13 +24,17 @@ public class OnboardingController {
     private final VendedorMapper mapper;
 
     @PostMapping("/start")
-    public VendedorResponseDTO startOnboarding(@RequestBody VendedorDTO vendedorDto) {
-        log.info("=== Iniciando onboarding para o vendedor {}\n", vendedorDto.toString());
-        var vendedor = mapper.toDomain(vendedorDto);
-        onboardingVendedorPort.startSaga(vendedor);
-        VendedorResponseDTO response = mapper.toResponseDTO(vendedor);
-        response.setStatus("ONBOARDING_INICIADO");
-        log.info("=== Onboarding Iniciado");
+    public SolicitacaoResponseDTO startOnboarding(@RequestBody SolicitacaoDTO solicitacaoDto) {
+        log.info("=== Iniciando onboarding para o vendedor {}\n", solicitacaoDto.toString());
+
+        var vendedor = mapper.toDomain(solicitacaoDto);
+        var status = onboardingVendedorPort.startSaga(vendedor);
+
+        SolicitacaoResponseDTO response = mapper.toResponseDTO(vendedor);
+        response.setStatus(status);
+
+        log.info("=== Onboarding {}", status);
+
         return response;
     }
 

@@ -8,7 +8,7 @@ import java.util.UUID;
 
 @Data
 @Builder
-public class SagaEtapa {
+public class EtapaSaga {
 
     private UUID id;
 
@@ -18,7 +18,9 @@ public class SagaEtapa {
 
     private StatusEtapaEnum status;
 
-    private String payloadUsado;
+    private String payload;
 
     private LocalDateTime dataExecucao;
+
+    private LocalDateTime dataAtualizacao;
 }

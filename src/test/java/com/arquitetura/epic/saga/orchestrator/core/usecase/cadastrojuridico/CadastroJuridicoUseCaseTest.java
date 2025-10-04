@@ -3,7 +3,7 @@ package com.arquitetura.epic.saga.orchestrator.core.usecase.cadastrojuridico;
 import com.arquitetura.epic.saga.orchestrator.core.domain.model.in.ListenerEnum;
 import com.arquitetura.epic.saga.orchestrator.core.domain.model.in.SagaTopico;
 import com.arquitetura.epic.saga.orchestrator.core.domain.model.out.Saga;
-import com.arquitetura.epic.saga.orchestrator.core.domain.model.out.SagaEtapa;
+import com.arquitetura.epic.saga.orchestrator.core.domain.model.out.EtapaSaga;
 import com.arquitetura.epic.saga.orchestrator.core.domain.model.out.StatusEtapaEnum;
 import com.arquitetura.epic.saga.orchestrator.core.domain.model.out.StatusSagaEnum;
 import com.arquitetura.epic.saga.orchestrator.core.port.out.etapasaga.EtapaSagaRepositoryPort;
@@ -42,7 +42,7 @@ class CadastroJuridicoUseCaseTest {
                 .etapaId(UUID.randomUUID().toString())
                 .sagaId(UUID.randomUUID().toString())
                 .build();
-        SagaEtapa etapa = mock(SagaEtapa.class);
+        EtapaSaga etapa = mock(EtapaSaga.class);
 
         when(etapaSagaRepositoryPort.buscarPorId(sagaTopico.getEtapaId()))
                 .thenReturn(Optional.of(etapa));
@@ -66,7 +66,7 @@ class CadastroJuridicoUseCaseTest {
                 .etapaId(etapaId.toString())
                 .sagaId(sagaId.toString())
                 .build();
-        SagaEtapa etapa = mock(SagaEtapa.class);
+        EtapaSaga etapa = mock(EtapaSaga.class);
         Saga saga = mock(Saga.class);
 
         when(etapaSagaRepositoryPort.buscarPorId(etapaId.toString())).thenReturn(Optional.of(etapa));
@@ -112,7 +112,7 @@ class CadastroJuridicoUseCaseTest {
                 .etapaId(etapaId.toString())
                 .sagaId(sagaId.toString())
                 .build();
-        SagaEtapa etapa = mock(SagaEtapa.class);
+        EtapaSaga etapa = mock(EtapaSaga.class);
 
         when(etapaSagaRepositoryPort.buscarPorId(etapaId.toString())).thenReturn(Optional.of(etapa));
         when(sagaRepositoryPort.buscarPorId(sagaId.toString())).thenReturn(Optional.empty());

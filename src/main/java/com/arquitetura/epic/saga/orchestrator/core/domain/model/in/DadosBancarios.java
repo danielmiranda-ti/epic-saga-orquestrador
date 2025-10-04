@@ -7,14 +7,11 @@ import lombok.NoArgsConstructor;
 
 @Data
 @Builder
-//@NoArgsConstructor
-//@AllArgsConstructor
 public class DadosBancarios {
 
     private String banco;
     private String agencia;
-    private String conta;
+    private String numeroConta;
     private String tipoConta;
-    private String titular;
 
 }

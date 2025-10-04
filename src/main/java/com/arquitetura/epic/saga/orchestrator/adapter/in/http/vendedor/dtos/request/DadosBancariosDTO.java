@@ -6,5 +6,6 @@ import lombok.Data;
 public class DadosBancariosDTO {
     private String banco;
     private String agencia;
-    private String conta;
+    private String numeroConta;
+    private String tipoConta;
 }

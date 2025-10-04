@@ -1,14 +1,14 @@
 package com.arquitetura.epic.saga.orchestrator.adapter.in.http.vendedor.dtos.mappers;
 
-import com.arquitetura.epic.saga.orchestrator.core.domain.model.in.Vendedor;
-import com.arquitetura.epic.saga.orchestrator.adapter.in.http.vendedor.dtos.request.VendedorDTO;
-import com.arquitetura.epic.saga.orchestrator.adapter.in.http.vendedor.dtos.response.VendedorResponseDTO;
+import com.arquitetura.epic.saga.orchestrator.core.domain.model.in.Solicitacao;
+import com.arquitetura.epic.saga.orchestrator.adapter.in.http.vendedor.dtos.request.SolicitacaoDTO;
+import com.arquitetura.epic.saga.orchestrator.adapter.in.http.vendedor.dtos.response.SolicitacaoResponseDTO;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
 public interface VendedorMapper {
 
-    Vendedor toDomain(VendedorDTO dto);
+    Solicitacao toDomain(SolicitacaoDTO dto);
 
-    VendedorResponseDTO toResponseDTO(Vendedor vendedor);
+    SolicitacaoResponseDTO toResponseDTO(Solicitacao vendedor);
 }

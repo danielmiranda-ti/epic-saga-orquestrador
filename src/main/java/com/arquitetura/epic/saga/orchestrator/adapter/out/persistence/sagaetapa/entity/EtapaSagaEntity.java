@@ -13,7 +13,7 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class SagaEtapaEntity {
+public class EtapaSagaEntity {
 
     @Id
     @GeneratedValue
@@ -33,7 +33,7 @@ public class SagaEtapaEntity {
     private EtapaStatusEnum status;
 
     @Lob
-    private String payloadUsado; // JSON do payload da etapa
+    private String payload; // JSON do payload da etapa
 
     @Column(nullable = false)
     private LocalDateTime dataExecucao;
@@ -43,8 +43,8 @@ public class SagaEtapaEntity {
         if (this.dataExecucao == null) {
             this.dataExecucao = LocalDateTime.now();
         }
-//        if (this.status == null) {
-//            this.status = EtapaStatus.EM_ANDAMENTO;
-//        }
+        if (this.status == null) {
+            this.status = EtapaStatusEnum.PENDENTE;
+        }
     }
 }

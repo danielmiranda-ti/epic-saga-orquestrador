@@ -7,13 +7,13 @@ echo "⏳ Aguardando Kafka iniciar..."
 sleep 15
 
 echo "📌 Criando tópicos da Epic Saga..."
-docker exec kafka kafka-topics --create --topic cadastro-juridico-start \
+docker exec kafka kafka-topics --create --topic cadastro-vendedor-start \
  --bootstrap-server localhost:9092 --partitions 1 --replication-factor 1
 
-docker exec kafka kafka-topics --create --topic cadastro-juridico-sucesso \
+docker exec kafka kafka-topics --create --topic cadastro-vendedor-sucesso \
  --bootstrap-server localhost:9092 --partitions 1 --replication-factor 1
 
-docker exec kafka kafka-topics --create --topic cadastro-juridico-falha \
+docker exec kafka kafka-topics --create --topic cadastro-vendedor-falha \
  --bootstrap-server localhost:9092 --partitions 1 --replication-factor 1
 
 docker exec kafka kafka-topics --create --topic verificacao-financeira-start \

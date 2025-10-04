@@ -5,13 +5,11 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class VendedorDTO {
+public class SolicitacaoDTO {
 
-    private String vendedorId;
+    private String solicitacaoId;
     private DadosPessoaisDTO dadosPessoais;
     private DadosJuridicosDTO dadosJuridicos;
     private DadosBancariosDTO dadosBancarios;
-    private DadosLojaDTO dadosLoja;
-    private List<DocumentoDTO> documentos;
-    private MetadadosDTO metadados;
+
 }

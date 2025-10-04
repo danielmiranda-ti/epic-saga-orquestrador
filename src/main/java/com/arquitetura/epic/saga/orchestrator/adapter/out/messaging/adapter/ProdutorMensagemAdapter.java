@@ -1,7 +1,7 @@
 package com.arquitetura.epic.saga.orchestrator.adapter.out.messaging.adapter;
 
 import com.arquitetura.epic.saga.orchestrator.infraestrutura.util.JsonUtil;
-import com.arquitetura.epic.saga.orchestrator.core.domain.model.out.SagaEtapa;
+import com.arquitetura.epic.saga.orchestrator.core.domain.model.out.EtapaSaga;
 import com.arquitetura.epic.saga.orchestrator.core.port.out.produtormensagem.ProdutorMensagemPort;
 import com.arquitetura.epic.saga.orchestrator.adapter.out.messaging.dto.MensagemDTO;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +23,7 @@ public class ProdutorMensagemAdapter implements ProdutorMensagemPort {
     private final KafkaTemplate<String, String> kafkaTemplate;
     private final JsonUtil jsonUtil;
 
-    public void enviaMensagem(Optional<SagaEtapa> etapaOpt, String topico) {
+    public void enviaMensagem(Optional<EtapaSaga> etapaOpt, String topico) {
         etapaOpt.ifPresentOrElse(
                 etapa -> {
                     String correlationId = MDC.get("correlationId");
@@ -41,17 +41,17 @@ public class ProdutorMensagemAdapter implements ProdutorMensagemPort {
         );
     }
 
-    private String getVendedorId(SagaEtapa etapa) {
-        return etapa.getSaga().getVendedorId() != null
-                ? etapa.getSaga().getVendedorId().toString()
+    private String getVendedorId(EtapaSaga etapa) {
+        return etapa.getSaga().getSolicitacaoId() != null
+                ? etapa.getSaga().getSolicitacaoId().toString()
                 : "UNKNOWN";
     }
 
-    private String criarMensagemJson(SagaEtapa etapa, String vendedorId) {
+    private String criarMensagemJson(EtapaSaga etapa, String vendedorId) {
         MensagemDTO mensagem = MensagemDTO.builder()
                 .sagaId(etapa.getSaga().getId().toString())
                 .vendedorId(vendedorId)
-                .payload(jsonUtil.fromJson(etapa.getPayloadUsado(), Object.class))
+                .payload(jsonUtil.fromJson(etapa.getPayload(), Object.class))
                 .build();
         return jsonUtil.toJson(mensagem);
     }

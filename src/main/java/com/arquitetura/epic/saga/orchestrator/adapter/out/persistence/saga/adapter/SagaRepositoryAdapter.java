@@ -27,4 +27,8 @@ public class SagaRepositoryAdapter implements SagaRepositoryPort {
     public Optional<Saga> buscarPorId(String sagaId) {
         return sagaRepository.findById(UUID.fromString(sagaId)).map(sagaMapper::toDomain);
     }
+
+    public Optional<Saga> buscarPorSolicitacaoId(String solicitacaoId) {
+        return sagaRepository.findBySolicitacaoId(UUID.fromString(solicitacaoId)).map(sagaMapper::toDomain);
+    }
 }

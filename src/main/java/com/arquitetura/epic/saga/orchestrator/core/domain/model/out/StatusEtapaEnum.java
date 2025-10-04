@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Getter
 public enum StatusEtapaEnum {
+    PENDENTE,
     EM_ANDAMENTO,
     SUCESSO,
     FALHA

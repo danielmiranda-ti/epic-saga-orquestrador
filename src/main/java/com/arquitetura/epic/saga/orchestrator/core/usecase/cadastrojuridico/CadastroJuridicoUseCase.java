@@ -2,7 +2,7 @@ package com.arquitetura.epic.saga.orchestrator.core.usecase.cadastrojuridico;
 
 import com.arquitetura.epic.saga.orchestrator.core.domain.model.in.ListenerEnum;
 import com.arquitetura.epic.saga.orchestrator.core.domain.model.in.SagaTopico;
-import com.arquitetura.epic.saga.orchestrator.core.domain.model.out.SagaEtapa;
+import com.arquitetura.epic.saga.orchestrator.core.domain.model.out.EtapaSaga;
 import com.arquitetura.epic.saga.orchestrator.core.domain.model.out.StatusEtapaEnum;
 import com.arquitetura.epic.saga.orchestrator.core.domain.model.out.StatusSagaEnum;
 import com.arquitetura.epic.saga.orchestrator.core.port.in.cadastrojuridico.CadastroJuridicoPort;
@@ -29,7 +29,7 @@ public class CadastroJuridicoUseCase implements CadastroJuridicoPort {
 
     @Transactional
     public void processar(SagaTopico sagaTopico, ListenerEnum listenerEnum) {
-        Optional<SagaEtapa> sagaEtapa = etapaSagaRepositoryPort.buscarPorId(sagaTopico.getEtapaId());
+        Optional<EtapaSaga> sagaEtapa = etapaSagaRepositoryPort.buscarPorId(sagaTopico.getEtapaId());
 
         if (listenerEnum == null) {
             log.warn("ListenerEnum nulo não tratado");
@@ -58,7 +58,7 @@ public class CadastroJuridicoUseCase implements CadastroJuridicoPort {
         }
     }
 
-    private void atualizarStatusEtapa(SagaEtapa etapa, StatusEtapaEnum status) {
+    private void atualizarStatusEtapa(EtapaSaga etapa, StatusEtapaEnum status) {
         etapa.setStatus(status);
         etapaSagaRepositoryPort.salvar(etapa);
     }

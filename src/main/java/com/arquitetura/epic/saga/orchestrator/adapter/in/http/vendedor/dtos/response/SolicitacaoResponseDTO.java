@@ -3,7 +3,7 @@ package com.arquitetura.epic.saga.orchestrator.adapter.in.http.vendedor.dtos.res
 import lombok.Data;
 
 @Data
-public class VendedorResponseDTO {
-    private String vendedorId;
+public class SolicitacaoResponseDTO {
+    private String solicitacaoId;
     private String status;
 }

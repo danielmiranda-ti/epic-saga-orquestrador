@@ -4,7 +4,11 @@ import lombok.Data;
 
 @Data
 public class DadosJuridicosDTO {
-    private String razaoSocial;
+    private String nomeFantasia;
     private String cnpj;
     private String inscricaoEstadual;
+    private String urlLoja;
+    private String logoUrl;
+    private String politicaEntrega;
+    private String politicaDevolucao;
 }

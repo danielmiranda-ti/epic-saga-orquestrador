@@ -1,8 +1,9 @@
 package com.arquitetura.epic.saga.orchestrator.core.usecase.onboarding;
 
-import com.arquitetura.epic.saga.orchestrator.core.domain.model.in.Vendedor;
+import com.arquitetura.epic.saga.orchestrator.core.domain.model.in.Solicitacao;
 import com.arquitetura.epic.saga.orchestrator.core.domain.model.out.Saga;
-import com.arquitetura.epic.saga.orchestrator.core.domain.model.out.SagaEtapa;
+import com.arquitetura.epic.saga.orchestrator.core.domain.model.out.EtapaSaga;
+import com.arquitetura.epic.saga.orchestrator.core.domain.model.shared.TipoEtapaEnum;
 import com.arquitetura.epic.saga.orchestrator.core.port.out.produtormensagem.ProdutorMensagemPort;
 import com.arquitetura.epic.saga.orchestrator.core.service.saga.SagaService;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,10 +13,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -39,27 +37,24 @@ class OnboardingVendedorUseCaseTest {
     @Test
     void startSaga_shouldSendMessageForCadastroJuridico() {
         // Arrange
-        Vendedor vendedor = mock(Vendedor.class);
+        Solicitacao solicitacao = Solicitacao.builder().solicitacaoId(UUID.randomUUID()).build();
 
-        SagaEtapa etapaJuridica = mock(SagaEtapa.class);
-        when(etapaJuridica.getNomeEtapa()).thenReturn("cadastro-juridico");
+        EtapaSaga etapaJuridica = EtapaSaga.builder().nomeEtapa(TipoEtapaEnum.CADASTRAR_DADOS_PESSOAIS.name()).build();
 
-        SagaEtapa etapaOutra = mock(SagaEtapa.class);
-        when(etapaOutra.getNomeEtapa()).thenReturn("outra-etapa");
+        EtapaSaga etapaOutra = EtapaSaga.builder().nomeEtapa("outra-etapa").build();
 
-        List<SagaEtapa> etapas = Arrays.asList(etapaOutra, etapaJuridica);
+        List<EtapaSaga> etapas = Arrays.asList(etapaOutra, etapaJuridica);
 
-        Saga saga = mock(Saga.class);
-        when(saga.getEtapasSaga()).thenReturn(etapas);
+        Saga saga = Saga.builder().etapasSaga(etapas).build();
 
-        when(sagaService.registrarSaga(vendedor)).thenReturn(saga);
+        when(sagaService.registrarSaga(solicitacao)).thenReturn(saga);
 
         // Act
-        onboardingVendedorUseCase.startSaga(vendedor);
+        var status = onboardingVendedorUseCase.startSaga(solicitacao);
 
         // Assert
-        ArgumentCaptor<Optional<SagaEtapa>> etapaCaptor = ArgumentCaptor.forClass(Optional.class);
-        verify(produtorMensagemPort).enviaMensagem(etapaCaptor.capture(), eq("cadastro-juridico-start"));
+        ArgumentCaptor<Optional<EtapaSaga>> etapaCaptor = ArgumentCaptor.forClass(Optional.class);
+        verify(produtorMensagemPort).enviaMensagem(etapaCaptor.capture(), eq("cadastro-vendedor-start"));
         assertTrue(etapaCaptor.getValue().isPresent());
         assertEquals(etapaJuridica, etapaCaptor.getValue().get());
     }
@@ -67,25 +62,46 @@ class OnboardingVendedorUseCaseTest {
     @Test
     void startSaga_shouldSendEmptyOptionalIfNoCadastroJuridico() {
         // Arrange
-        Vendedor vendedor = mock(Vendedor.class);
+        Solicitacao solicitacao = Solicitacao.builder().solicitacaoId(UUID.randomUUID()).build();
 
-        SagaEtapa etapaOutra = mock(SagaEtapa.class);
+        EtapaSaga etapaOutra = EtapaSaga.builder().nomeEtapa("outra-etapa").build();
+
+        List<EtapaSaga> etapas = Collections.singletonList(etapaOutra);
+
+        Saga saga = Saga.builder().etapasSaga(etapas).build();
+
+        when(sagaService.buscarSagaPorSolicitacaoId("id-qualquer")).thenReturn(Optional.empty());
+
+        when(sagaService.registrarSaga(solicitacao)).thenReturn(saga);
+
+        // Act
+        var status = onboardingVendedorUseCase.startSaga(solicitacao);
+
+        // Assert
+        verifyNoInteractions(produtorMensagemPort);
+
+    }
+
+    @Test
+    void startSaga_shouldNotSendMessageIfNoCadastroDadosPessoais() {
+        // Arrange
+        Solicitacao solicitacao = Solicitacao.builder().solicitacaoId(UUID.randomUUID()).build();
+
+        EtapaSaga etapaOutra = mock(EtapaSaga.class);
         when(etapaOutra.getNomeEtapa()).thenReturn("outra-etapa");
 
-        List<SagaEtapa> etapas = Collections.singletonList(etapaOutra);
+        List<EtapaSaga> etapas = Collections.singletonList(etapaOutra);
 
         Saga saga = mock(Saga.class);
         when(saga.getEtapasSaga()).thenReturn(etapas);
 
-        when(sagaService.registrarSaga(vendedor)).thenReturn(saga);
+        when(sagaService.registrarSaga(solicitacao)).thenReturn(saga);
 
         // Act
-        onboardingVendedorUseCase.startSaga(vendedor);
+        onboardingVendedorUseCase.startSaga(solicitacao);
 
         // Assert
-        ArgumentCaptor<Optional<SagaEtapa>> etapaCaptor = ArgumentCaptor.forClass(Optional.class);
-        verify(produtorMensagemPort).enviaMensagem(etapaCaptor.capture(), eq("cadastro-juridico-start"));
-        assertFalse(etapaCaptor.getValue().isPresent());
+        verify(produtorMensagemPort, never()).enviaMensagem(any(), any());
     }
 
 }

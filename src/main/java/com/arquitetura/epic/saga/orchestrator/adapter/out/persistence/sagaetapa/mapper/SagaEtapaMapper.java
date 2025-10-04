@@ -1,14 +1,14 @@
 package com.arquitetura.epic.saga.orchestrator.adapter.out.persistence.sagaetapa.mapper;
 
-import com.arquitetura.epic.saga.orchestrator.core.domain.model.out.SagaEtapa;
-import com.arquitetura.epic.saga.orchestrator.adapter.out.persistence.sagaetapa.entity.SagaEtapaEntity;
+import com.arquitetura.epic.saga.orchestrator.core.domain.model.out.EtapaSaga;
+import com.arquitetura.epic.saga.orchestrator.adapter.out.persistence.sagaetapa.entity.EtapaSagaEntity;
 import org.mapstruct.Mapper;
 
 
 @Mapper(componentModel = "spring")
 public interface SagaEtapaMapper {
 
-    SagaEtapa toDomain(SagaEtapaEntity entity);
+    EtapaSaga toDomain(EtapaSagaEntity entity);
 
-    SagaEtapaEntity toEntity(SagaEtapa sagaEtapa);
+    EtapaSagaEntity toEntity(EtapaSaga sagaEtapa);
 }

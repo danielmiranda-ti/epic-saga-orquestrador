@@ -12,4 +12,6 @@ public interface SagaRepositoryPort {
 
     Optional<Saga> buscarPorId(String sagaId);
 
+    Optional<Saga> buscarPorSolicitacaoId(String solicitacaoId);
+
 }

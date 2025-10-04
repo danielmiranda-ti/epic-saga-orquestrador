@@ -8,4 +8,5 @@ public class EtapaInfo {
 
     private String nome;
     private Object dados;
+    private StatusEtapaEnum status;
 }

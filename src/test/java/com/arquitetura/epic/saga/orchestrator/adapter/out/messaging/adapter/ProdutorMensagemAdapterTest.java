@@ -2,7 +2,7 @@ package com.arquitetura.epic.saga.orchestrator.adapter.out.messaging.adapter;
 
 import com.arquitetura.epic.saga.orchestrator.adapter.out.messaging.dto.MensagemDTO;
 import com.arquitetura.epic.saga.orchestrator.core.domain.model.out.Saga;
-import com.arquitetura.epic.saga.orchestrator.core.domain.model.out.SagaEtapa;
+import com.arquitetura.epic.saga.orchestrator.core.domain.model.out.EtapaSaga;
 import com.arquitetura.epic.saga.orchestrator.infraestrutura.util.JsonUtil;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.junit.jupiter.api.*;
@@ -43,11 +43,11 @@ class ProdutorMensagemAdapterTest {
 
         Saga saga = mock(Saga.class);
         when(saga.getId()).thenReturn(UUID.randomUUID());
-        when(saga.getVendedorId()).thenReturn(UUID.randomUUID());
+        when(saga.getSolicitacaoId()).thenReturn(UUID.randomUUID());
 
-        SagaEtapa etapa = mock(SagaEtapa.class);
+        EtapaSaga etapa = mock(EtapaSaga.class);
         when(etapa.getSaga()).thenReturn(saga);
-        when(etapa.getPayloadUsado()).thenReturn("{\"foo\":\"bar\"}");
+        when(etapa.getPayload()).thenReturn("{\"foo\":\"bar\"}");
 
         Object payloadObj = new Object();
         when(jsonUtil.fromJson(any(), eq(Object.class))).thenReturn(payloadObj);
@@ -83,9 +83,9 @@ class ProdutorMensagemAdapterTest {
     void getVendedorId_deveRetornarUnknownQuandoVendedorIdNulo() {
         // Arrange
         Saga saga = mock(Saga.class);
-        when(saga.getVendedorId()).thenReturn(null);
+        when(saga.getSolicitacaoId()).thenReturn(null);
         when(saga.getId()).thenReturn(UUID.randomUUID());
-        SagaEtapa etapa = mock(SagaEtapa.class);
+        EtapaSaga etapa = mock(EtapaSaga.class);
         when(etapa.getSaga()).thenReturn(saga);
 
         // Act (usando reflection para testar método privado)
@@ -102,10 +102,10 @@ class ProdutorMensagemAdapterTest {
         // NÃO setar MDC.put("correlationId", ...)
         Saga saga = mock(Saga.class);
         when(saga.getId()).thenReturn(UUID.randomUUID());
-        when(saga.getVendedorId()).thenReturn(UUID.randomUUID());
-        SagaEtapa etapa = mock(SagaEtapa.class);
+        when(saga.getSolicitacaoId()).thenReturn(UUID.randomUUID());
+        EtapaSaga etapa = mock(EtapaSaga.class);
         when(etapa.getSaga()).thenReturn(saga);
-        when(etapa.getPayloadUsado()).thenReturn("{\"foo\":\"bar\"}");
+        when(etapa.getPayload()).thenReturn("{\"foo\":\"bar\"}");
         Object payloadObj = new Object();
         when(jsonUtil.fromJson(any(), eq(Object.class))).thenReturn(payloadObj);
         when(jsonUtil.toJson(any(MensagemDTO.class))).thenReturn("{json}");
