@@ -1,9 +1,6 @@
 package com.arquitetura.epic.saga.orchestrator.core.usecase.onboarding;
 
 import com.arquitetura.epic.saga.orchestrator.core.domain.model.in.Solicitacao;
-import com.arquitetura.epic.saga.orchestrator.core.domain.model.out.EtapaSaga;
-import com.arquitetura.epic.saga.orchestrator.core.domain.model.out.Saga;
-import com.arquitetura.epic.saga.orchestrator.core.domain.model.out.StatusSagaEnum;
 import com.arquitetura.epic.saga.orchestrator.core.domain.model.shared.TipoEtapaEnum;
 import com.arquitetura.epic.saga.orchestrator.core.port.in.onboarding.OnboardingVendedorPort;
 import com.arquitetura.epic.saga.orchestrator.core.port.out.produtormensagem.ProdutorMensagemPort;
@@ -22,7 +19,7 @@ public class OnboardingVendedorUseCase implements OnboardingVendedorPort {
     private final ProdutorMensagemPort produtorMensagemPort;
     private final SagaService sagaService;
 
-    @Value("${kafka.topic.cadastro-vendedor-start}")
+    @Value("${kafka.topic.command.register.seller}")
     private String topicoCadastroVendedorStart;
 
     @Override

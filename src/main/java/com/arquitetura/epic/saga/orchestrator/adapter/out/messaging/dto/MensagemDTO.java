@@ -11,7 +11,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class MensagemDTO {
 
-    private String sagaId;
-    private String vendedorId;
+    private String solicitacaoId;
+    private String tipo;
     private Object payload;
 }
+

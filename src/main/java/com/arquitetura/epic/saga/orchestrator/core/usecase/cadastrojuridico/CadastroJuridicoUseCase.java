@@ -13,6 +13,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -27,6 +28,9 @@ public class CadastroJuridicoUseCase implements CadastroJuridicoPort {
     private final EtapaSagaRepositoryPort etapaSagaRepositoryPort;
     private final SagaRepositoryPort sagaRepositoryPort;
 
+    @Value("${kafka.topic.command.register.store}")
+    private String topicStore;
+
     @Transactional
     public void processar(SagaTopico sagaTopico, ListenerEnum listenerEnum) {
         Optional<EtapaSaga> sagaEtapa = etapaSagaRepositoryPort.buscarPorId(sagaTopico.getEtapaId());
@@ -38,8 +42,10 @@ public class CadastroJuridicoUseCase implements CadastroJuridicoPort {
 
         switch(listenerEnum) {
             case SUCESSO -> sagaEtapa.ifPresent(etapa -> {
-                produtorMensagemPort.enviaMensagem(sagaEtapa, "verificacao-financeira-start");
                 atualizarStatusEtapa(etapa, StatusEtapaEnum.SUCESSO);
+                produtorMensagemPort.enviaMensagem(sagaEtapa, topicStore);
+
+                // TODO E SE OCORRER ALGUMA FALHA AQUI?
             });
             case FALHA -> {
                 sagaEtapa.ifPresent(etapa -> {
@@ -56,6 +62,10 @@ public class CadastroJuridicoUseCase implements CadastroJuridicoPort {
             }
             default -> log.warn("ListenerEnum {} não tratado", listenerEnum);
         }
+    }
+
+    public void processCompensation(String id) {
+
     }
 
     private void atualizarStatusEtapa(EtapaSaga etapa, StatusEtapaEnum status) {

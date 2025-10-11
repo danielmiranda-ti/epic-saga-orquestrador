@@ -13,17 +13,18 @@ import org.slf4j.MDC;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
+@Deprecated
 @Component
 @RequiredArgsConstructor
 public class CadastroJuridicoListener {
 
     private static final Logger log = LoggerFactory.getLogger(CadastroJuridicoListener.class);
-    private CadastroJuridicoPort cadastroJuridicoPort;
-    private MensagemMapper mensagemMapper;
-    private JsonUtil jsonUtil;
+    private final CadastroJuridicoPort cadastroJuridicoPort;
+    private final MensagemMapper mensagemMapper;
+    private final JsonUtil jsonUtil;
 
 
-    @KafkaListener(topics = "cadastro-juridico-sucesso", groupId = "orchestrator")
+    @KafkaListener(topics = "${saga.epic.seller.event.register.success}", groupId = "orchestrator")
     public void onCadastroJuridicoAprovado(ConsumerRecord<String, String> record) {
 
         extractedCorrelation(record);
@@ -39,7 +40,7 @@ public class CadastroJuridicoListener {
 
     }
 
-    @KafkaListener(topics = "cadastro-juridico-falha", groupId = "orchestrator")
+    @KafkaListener(topics = "${saga.epic.seller.event.register.failed}", groupId = "orchestrator")
     public void onCadastroJuridicoFalha(ConsumerRecord<String, String> record) {
 
         extractedCorrelation(record);
