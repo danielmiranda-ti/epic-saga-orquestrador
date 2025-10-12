@@ -4,8 +4,11 @@ import com.arquitetura.epic.saga.orchestrator.adapter.out.persistence.sagaetapa.
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.UUID;
 
 @Repository
 public interface SagaEtapaRepository extends JpaRepository<EtapaSagaEntity, UUID> {
+
+    List<EtapaSagaEntity> findBySaga_SolicitacaoIdAndNomeEtapaIn(UUID solicitacaoId, List<String> tipos);
 }

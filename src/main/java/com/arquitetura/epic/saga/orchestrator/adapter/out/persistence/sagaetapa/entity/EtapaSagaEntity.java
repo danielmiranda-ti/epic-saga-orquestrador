@@ -35,7 +35,7 @@ public class EtapaSagaEntity {
     @Lob
     private String payload; // JSON do payload da etapa
 
-    @Column(nullable = false)
+    @Column(name = "data_execucao", nullable = false)
     private LocalDateTime dataExecucao;
 
     @PrePersist

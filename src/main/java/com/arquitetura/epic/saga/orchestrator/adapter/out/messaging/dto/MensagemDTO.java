@@ -12,7 +12,8 @@ import lombok.NoArgsConstructor;
 public class MensagemDTO {
 
     private String solicitacaoId;
-    private String tipo;
+    private String etapa;
+    private String vendedorId;
     private Object payload;
 }
 

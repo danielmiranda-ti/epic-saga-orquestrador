@@ -28,7 +28,7 @@ public class ProdutorMensagemAdapter implements ProdutorMensagemPort {
                 etapa -> {
                     String correlationId = MDC.get("correlationId");
                     String vendedorId = getVendedorId(etapa);
-                    String mensagemJson = criarMensagemJson(etapa, etapa.getNomeEtapa());
+                    String mensagemJson = criarMensagemJson(etapa, vendedorId);
 
                     ProducerRecord<String, String> record = new ProducerRecord<>(topico, mensagemJson);
                     record.headers().add("X-Correlation-Id",
@@ -42,15 +42,16 @@ public class ProdutorMensagemAdapter implements ProdutorMensagemPort {
     }
 
     private String getVendedorId(EtapaSaga etapa) {
-        return etapa.getSaga().getSolicitacaoId() != null
-                ? etapa.getSaga().getSolicitacaoId().toString()
+        return etapa.getSaga().getSellerId() != null
+                ? etapa.getSaga().getSellerId()
                 : "UNKNOWN";
     }
 
-    private String criarMensagemJson(EtapaSaga etapa, String nomeEtapa) {
+    private String criarMensagemJson(EtapaSaga etapa, String vendedorId) {
         MensagemDTO mensagem = MensagemDTO.builder()
                 .solicitacaoId(etapa.getSaga().getSolicitacaoId().toString())
-                .tipo(etapa.getNomeEtapa())
+                .etapa(etapa.getNomeEtapa())
+                .vendedorId(vendedorId)
                 .payload(jsonUtil.fromJson(etapa.getPayload(), Object.class))
                 .build();
         return jsonUtil.toJson(mensagem);

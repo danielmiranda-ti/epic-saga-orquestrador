@@ -39,7 +39,7 @@ class OnboardingVendedorUseCaseTest {
         // Arrange
         Solicitacao solicitacao = Solicitacao.builder().solicitacaoId(UUID.randomUUID()).build();
 
-        EtapaSaga etapaJuridica = EtapaSaga.builder().nomeEtapa(TipoEtapaEnum.CADASTRAR_DADOS_PESSOAIS.name()).build();
+        EtapaSaga etapaJuridica = EtapaSaga.builder().nomeEtapa(TipoEtapaEnum.SELLER_REGISTRATION.name()).build();
 
         EtapaSaga etapaOutra = EtapaSaga.builder().nomeEtapa("outra-etapa").build();
 

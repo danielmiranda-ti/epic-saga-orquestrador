@@ -18,6 +18,8 @@ public class Saga {
 
     private StatusSagaEnum status;
 
+    private String sellerId;
+
     private LocalDateTime dataInicio;
 
     private LocalDateTime dataFim;

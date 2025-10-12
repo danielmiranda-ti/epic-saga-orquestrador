@@ -34,7 +34,7 @@ public class OnboardingVendedorUseCase implements OnboardingVendedorPort {
 
                     // Busca a etapa de dados pessoais
                     saga.getEtapasSaga().stream()
-                            .filter(etapa -> TipoEtapaEnum.CADASTRAR_DADOS_PESSOAIS.name().equals(etapa.getNomeEtapa()))
+                            .filter(etapa -> TipoEtapaEnum.SELLER_REGISTRATION.name().equals(etapa.getNomeEtapa()))
                             .findFirst()
                             .ifPresent(etapa -> produtorMensagemPort.enviaMensagem(Optional.of(etapa), "cadastro-vendedor-start"));
 

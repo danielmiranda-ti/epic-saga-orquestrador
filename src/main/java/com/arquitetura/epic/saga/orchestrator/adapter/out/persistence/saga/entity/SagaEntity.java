@@ -28,6 +28,9 @@ public class SagaEntity {
     @Column(nullable = false)
     private SagaStatus status;
 
+    @Column(name = "seller_id")
+    private String sellerId;
+
     @Column(nullable = false)
     private LocalDateTime dataInicio;
 
@@ -36,12 +39,6 @@ public class SagaEntity {
     @Builder.Default
     @OneToMany(mappedBy = "saga", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<EtapaSagaEntity> etapas = new ArrayList<>();
-
-    // método utilitário para adicionar etapa
-//    public void adicionarEtapa(SagaEtapaEntity etapa) {
-//        etapa.setSaga(this);
-//        this.etapas.add(etapa);
-//    }
 
     // inicializa saga automaticamente em andamento
     @PrePersist
