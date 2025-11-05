@@ -9,7 +9,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -43,13 +42,13 @@ class SagaServiceTest {
 
         Saga saga = Saga.builder()
                 .solicitacaoId(solicitacaoId)
-                .status(StatusSagaEnum.EM_ANDAMENTO)
+                .status(StatusSagaEnum.IN_PROGRESS)
                 .etapasSaga(new ArrayList<>())
                 .build();
 
         Saga sagaPersistida = Saga.builder()
                 .solicitacaoId(solicitacaoId)
-                .status(StatusSagaEnum.EM_ANDAMENTO)
+                .status(StatusSagaEnum.IN_PROGRESS)
                 .etapasSaga(new ArrayList<>())
                 .build();
 
@@ -70,7 +69,7 @@ class SagaServiceTest {
         // Assert
         assertNotNull(result);
         assertEquals(solicitacaoId, result.getSolicitacaoId());
-        assertEquals(StatusSagaEnum.EM_ANDAMENTO, result.getStatus());
+        assertEquals(StatusSagaEnum.IN_PROGRESS, result.getStatus());
         assertEquals(3, result.getEtapasSaga().size());
 
         verify(sagaRepositoryPort).salvar(any(Saga.class));

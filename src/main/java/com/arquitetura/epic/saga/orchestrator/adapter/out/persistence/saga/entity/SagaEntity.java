@@ -47,7 +47,7 @@ public class SagaEntity {
             this.dataInicio = LocalDateTime.now();
         }
         if (this.status == null) {
-            this.status = SagaStatus.EM_ANDAMENTO;
+            this.status = SagaStatus.IN_PROGRESS;
         }
     }
 }

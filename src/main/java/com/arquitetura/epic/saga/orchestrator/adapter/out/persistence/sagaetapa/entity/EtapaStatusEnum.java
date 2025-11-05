@@ -1,8 +1,11 @@
 package com.arquitetura.epic.saga.orchestrator.adapter.out.persistence.sagaetapa.entity;
 
 public enum EtapaStatusEnum {
-    PENDENTE,
-    EM_ANDAMENTO,
-    SUCESSO,
-    FALHA
+    PENDING,
+    IN_PROGRESS,
+    IN_COMPENSATION,
+    COMPENSATED,
+    COMPENSATED_FAILURE,
+    SUCCESS,
+    FAILURE
 }

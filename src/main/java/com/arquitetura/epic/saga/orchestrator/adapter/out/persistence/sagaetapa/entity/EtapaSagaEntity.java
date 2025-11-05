@@ -44,7 +44,7 @@ public class EtapaSagaEntity {
             this.dataExecucao = LocalDateTime.now();
         }
         if (this.status == null) {
-            this.status = EtapaStatusEnum.PENDENTE;
+            this.status = EtapaStatusEnum.PENDING;
         }
     }
 }

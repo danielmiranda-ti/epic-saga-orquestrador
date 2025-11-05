@@ -36,7 +36,7 @@ public class OnboardingVendedorUseCase implements OnboardingVendedorPort {
                     saga.getEtapasSaga().stream()
                             .filter(etapa -> TipoEtapaEnum.SELLER_REGISTRATION.name().equals(etapa.getNomeEtapa()))
                             .findFirst()
-                            .ifPresent(etapa -> produtorMensagemPort.enviaMensagem(Optional.of(etapa), "cadastro-vendedor-start"));
+                            .ifPresent(etapa -> produtorMensagemPort.enviaMensagem(Optional.of(etapa), topicoCadastroVendedorStart));
 
                     return "INICIADO";
                 });

@@ -17,14 +17,24 @@ public class FinancialListener {
 
     private final FinancialPort financialPort;
 
-    @KafkaListener(topics = "${kafka.topic.event.success.financial}", groupId = "orchestrator")
-    public void onFinancialEventSuccess(ConsumerRecord<String, String> record) {
-        financialPort.process();
+    @KafkaListener(topics = "${kafka.topic.event.register.success.financial}", groupId = "orchestrator")
+    public void onFinancialEventRegisterSuccess(ConsumerRecord<String, String> record) {
+        financialPort.processEventRegisterSucess(null);
     }
 
-    @KafkaListener(topics = "${kafka.topic.event.failed.financial}", groupId = "orchestrator")
-    public void onFinancialEventFailed(ConsumerRecord<String, String> record) {
+    @KafkaListener(topics = "${kafka.topic.event.register.failed.financial}", groupId = "orchestrator")
+    public void onFinancialEventRegisterFailed(ConsumerRecord<String, String> record) {
+        financialPort.processEventRegisterFailure(null);
+    }
 
+    @KafkaListener(topics = "${kafka.topic.event.compensate.success.financial}", groupId = "orchestrator")
+    public void onFinancialEventCompensateSuccess(ConsumerRecord<String, String> record) {
+        financialPort.processEventCompensateSucess(null);
+    }
+
+    @KafkaListener(topics = "${kafka.topic.event.compensate.failed.financial}", groupId = "orchestrator")
+    public void onFinancialEventCompensateFailed(ConsumerRecord<String, String> record) {
+        financialPort.processEventCompensateFailure(null);
     }
 
     private void extractedCorrelation(ConsumerRecord<String, String> record) {

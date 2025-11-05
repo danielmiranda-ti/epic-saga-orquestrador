@@ -7,7 +7,9 @@ import lombok.RequiredArgsConstructor;
 @Getter
 public enum StatusSagaEnum {
 
-    EM_ANDAMENTO,
-    SUCESSO,
-    FALHA;
+    IN_PROGRESS,
+    IN_COMPENSATION,
+    COMPENSATED,
+    SUCCESS,
+    FAILURE;
 }

@@ -1,16 +1,20 @@
 package com.arquitetura.epic.saga.orchestrator.core.usecase.seller;
 
+import com.arquitetura.epic.saga.orchestrator.core.domain.model.in.Seller;
 import com.arquitetura.epic.saga.orchestrator.core.domain.model.out.Saga;
 import com.arquitetura.epic.saga.orchestrator.core.domain.model.out.StatusEtapaEnum;
 import com.arquitetura.epic.saga.orchestrator.core.domain.model.out.StatusSagaEnum;
 import com.arquitetura.epic.saga.orchestrator.core.domain.model.shared.TipoEtapaEnum;
 import com.arquitetura.epic.saga.orchestrator.core.port.in.seller.SellerPort;
 import com.arquitetura.epic.saga.orchestrator.core.service.saga.SagaService;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.retry.RetryContext;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Recover;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,40 +32,96 @@ public class SellerUseCase implements SellerPort {
     @Value("${kafka.topic.command.register.store}")
     private String topicNameStore;
 
-    @Value("${kafka.topic.event.failed.seller}")
-    private String topicEventFailure;
+//    @Value("${kafka.topic.command.compensate.seller}")
+//    private String topicCommandCompensateSeller;
 
+
+    @Retryable(
+            recover = "handleCompensationEventRegisterSucess",
+            maxAttempts = 4,
+            backoff = @Backoff(delay = 1000))
+    public void processEventRegisterSucess(Seller seller) {
+
+        RetryContext context = org.springframework.retry.support.RetrySynchronizationManager.getContext();
+        if (context != null) {
+            int attempt = context.getRetryCount() + 1;
+            log.info("Tentativa {} de processamento do seller {}", attempt, seller.getSellerId());
+        }
+
+        var regras = Map.of(
+                TipoEtapaEnum.SELLER_REGISTRATION, StatusEtapaEnum.SUCCESS,
+                TipoEtapaEnum.STORE_REGISTRATION, StatusEtapaEnum.IN_PROGRESS
+        );
+        sagaService.processarEtapasSaga(
+                seller.getRequestId(),
+                regras,
+                TipoEtapaEnum.STORE_REGISTRATION,
+                topicNameStore,
+                saga -> saga.setSellerId(seller.getSellerId()));
+    }
+
+    @Recover
+    public void handleCompensationEventRegisterSucess(Exception ex, Seller seller) {
+        // solicito a compensação
+        var regras = Map.of(
+                TipoEtapaEnum.SELLER_REGISTRATION, StatusEtapaEnum.IN_COMPENSATION
+        );
+        sagaService.processarEtapasSaga(
+                seller.getRequestId(),
+                regras,
+                TipoEtapaEnum.SELLER_REGISTRATION,
+                null,
+                saga -> {
+                    saga.setSellerId(seller.getSellerId());
+                    saga.setStatus(StatusSagaEnum.IN_COMPENSATION);
+                });
+    }
 
     @Override
-    @Transactional
-    public void process() {
-        try {
-            var tiposEtapas = List.of(TipoEtapaEnum.SELLER_REGISTRATION, TipoEtapaEnum.STORE_REGISTRATION);
-            var regras = Map.of(
-                    TipoEtapaEnum.SELLER_REGISTRATION, StatusEtapaEnum.SUCESSO,
-                    TipoEtapaEnum.STORE_REGISTRATION, StatusEtapaEnum.EM_ANDAMENTO
-            );
-            sagaService.processarEtapasSaga("", "",
-                    tiposEtapas,
-                    regras,
-                    TipoEtapaEnum.STORE_REGISTRATION,
-                    topicNameStore,
-                    saga -> saga.setSellerId("sellerId"));
-        } catch (Exception ex) {
-            log.error("Erro ao processar seller: {}", ex.getMessage(), ex);
-            Consumer<Saga> sagaUpdater = saga -> {
-                saga.setSellerId("sellerId");
-                saga.setStatus(StatusSagaEnum.FALHA);
-            };
-            sagaService.processarEtapasSaga(
-                    "",
-                    "",
-                    List.of(TipoEtapaEnum.SELLER_REGISTRATION),
-                    Map.of(TipoEtapaEnum.SELLER_REGISTRATION, StatusEtapaEnum.FALHA),
-                    TipoEtapaEnum.STORE_REGISTRATION,
-                    topicNameStore,
-                    sagaUpdater
-            );
-        }
+    public void processEventRegisterFailure(Seller seller) {
+        Consumer<Saga> sagaUpdater = saga -> {
+            saga.setSellerId(seller.getSellerId());
+            saga.setStatus(StatusSagaEnum.FAILURE);
+        };
+        sagaService.processarEtapasSaga(
+                seller.getRequestId(),
+//                List.of(TipoEtapaEnum.SELLER_REGISTRATION),
+                Map.of(TipoEtapaEnum.SELLER_REGISTRATION, StatusEtapaEnum.FAILURE),
+                TipoEtapaEnum.STORE_REGISTRATION,
+                null,
+                sagaUpdater
+        );
+    }
+
+    @Override
+    public void processEventCompensateSucess(Seller seller) {
+        Consumer<Saga> sagaUpdater = saga -> {
+            saga.setSellerId(seller.getSellerId());
+            saga.setStatus(StatusSagaEnum.COMPENSATED);
+        };
+        sagaService.processarEtapasSaga(
+                seller.getRequestId(),
+                Map.of(TipoEtapaEnum.SELLER_REGISTRATION, StatusEtapaEnum.COMPENSATED),
+                TipoEtapaEnum.STORE_REGISTRATION,
+                null,
+                sagaUpdater
+        );
+    }
+
+    @Override
+    public void processEventCompensateFailure(Seller seller) {
+        var regras = Map.of(
+                TipoEtapaEnum.SELLER_REGISTRATION, StatusEtapaEnum.COMPENSATED_FAILURE
+        );
+
+        sagaService.processarEtapasSaga(
+                seller.getRequestId(),
+                regras,
+                TipoEtapaEnum.SELLER_REGISTRATION,
+                null,
+                saga -> {
+                    saga.setSellerId(seller.getSellerId());
+                    saga.setStatus(StatusSagaEnum.IN_COMPENSATION);
+                });
     }
 }

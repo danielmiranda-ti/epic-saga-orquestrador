@@ -17,14 +17,24 @@ public class StoreListener {
 
     private final StorePort storePort;
 
-    @KafkaListener(topics = "${kafka.topic.event.success.store}", groupId = "orchestrator")
-    public void onStoreEventSuccess(ConsumerRecord<String, String> record) {
-        storePort.process();
+    @KafkaListener(topics = "${kafka.topic.event.register.success.store}", groupId = "orchestrator")
+    public void onStoreEventRegisterSuccess(ConsumerRecord<String, String> record) {
+        storePort.processEventRegisterSucess(null);
     }
 
-    @KafkaListener(topics = "${kafka.topic.event.failed.store}", groupId = "orchestrator")
-    public void onStoreEventFailed(ConsumerRecord<String, String> record) {
+    @KafkaListener(topics = "${kafka.topic.event.register.failed.store}", groupId = "orchestrator")
+    public void onStoreEventRegisterFailed(ConsumerRecord<String, String> record) {
 
+    }
+
+    @KafkaListener(topics = "${kafka.topic.event.compensate.success.store}", groupId = "orchestrator")
+    public void onStoreEventCompensateSuccess(ConsumerRecord<String, String> record) {
+        storePort.processEventRegisterSucess(null);
+    }
+
+    @KafkaListener(topics = "${kafka.topic.event.compensate.failed.store}", groupId = "orchestrator")
+    public void onStoreEventCompensateFailed(ConsumerRecord<String, String> record) {
+        storePort.processEventRegisterSucess(null);
     }
 
     private void extractedCorrelation(ConsumerRecord<String, String> record) {

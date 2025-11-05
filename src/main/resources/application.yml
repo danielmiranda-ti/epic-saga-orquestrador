@@ -31,11 +31,21 @@ kafka:
         store: saga.epic.store.command.compensate
         financial: saga.epic.financial.command.compensate
     event:
-      success:
-        seller: saga.epic.seller.event.register.success
-        store: saga.epic.store.event.register.success
-        financial: saga.epic.financial.event.register.success
-      failed:
-        seller: saga.epic.seller.event.register.failed
-        store: saga.epic.store.event.register.failed
-        financial: saga.epic.financial.event.register.failed
+      register:
+        success:
+          seller: saga.epic.seller.event.register.success
+          store: saga.epic.store.event.register.success
+          financial: saga.epic.financial.event.register.success
+        failed:
+          seller: saga.epic.seller.event.register.failed
+          store: saga.epic.store.event.register.failed
+          financial: saga.epic.financial.event.register.failed
+      compensate:
+        success:
+          seller: saga.epic.seller.event.compensation.success
+          store: saga.epic.store.event.compensation.success
+          financial: saga.epic.financial.event.compensation.success
+        failed:
+          seller: saga.epic.seller.event.compensation.failed
+          store: saga.epic.store.event.compensation.failed
+          financial: saga.epic.financial.event.compensation.failed
