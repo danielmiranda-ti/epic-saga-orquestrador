@@ -10,5 +10,5 @@ import java.util.UUID;
 @Repository
 public interface SagaEtapaRepository extends JpaRepository<EtapaSagaEntity, UUID> {
 
-    List<EtapaSagaEntity> findBySaga_SolicitacaoIdAndNomeEtapaIn(UUID solicitacaoId, List<String> tipos);
+    List<EtapaSagaEntity> findBySagaIdAndNomeEtapaIn(UUID sagaId, List<String> tipos);
 }

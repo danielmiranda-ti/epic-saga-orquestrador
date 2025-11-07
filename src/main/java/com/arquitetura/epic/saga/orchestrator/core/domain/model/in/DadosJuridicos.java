@@ -9,7 +9,6 @@ public class DadosJuridicos {
 
     private String nomeFantasia;
     private String cnpj;
-    private String inscricaoEstadual;
     private String urlLoja;
     private String logoUrl;
     private String politicaEntrega;

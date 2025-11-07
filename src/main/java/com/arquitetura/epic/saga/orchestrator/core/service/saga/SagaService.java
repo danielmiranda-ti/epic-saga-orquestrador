@@ -13,10 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Consumer;
 
 @Service
@@ -90,7 +87,7 @@ public class SagaService {
             String topicName,
             Consumer<Saga> sagaUpdater
     ) {
-        Optional<Saga> sagaOpt = sagaRepositoryPort.buscarPorId(requestId);
+        Optional<Saga> sagaOpt = sagaRepositoryPort.buscarPorSolicitacaoId(requestId);
         if (sagaOpt.isEmpty()) {
             log.warn("=== Não foi encontrado saga para a requisição {}", requestId);
             return;
@@ -99,14 +96,14 @@ public class SagaService {
         Saga saga = sagaOpt.get();
         atualizarSaga(sagaUpdater, saga);
 
-        List<EtapaSaga> etapas = buscarEtapasRelacionadas(requestId, regrasStatus, nextStep);
-        atualizarStatusDasEtapas(etapas, regrasStatus);
+        List<EtapaSaga> etapas = buscarEtapasRelacionadas(saga.getId(), regrasStatus, nextStep);
+        atualizarStatusDasEtapas(etapas, regrasStatus, saga);
         etapaSagaRepositoryPort.atualizarEtapas(etapas);
 
         enviarMensagemSeNecessario(etapas, nextStep, topicName);
     }
 
-    private List<EtapaSaga> buscarEtapasRelacionadas(String requestId,
+    private List<EtapaSaga> buscarEtapasRelacionadas(UUID sagaId,
                                                      Map<TipoEtapaEnum, StatusEtapaEnum> regrasStatus,
                                                      TipoEtapaEnum nextStep) {
         List<String> etapasABuscar = new ArrayList<>(
@@ -119,16 +116,17 @@ public class SagaService {
             etapasABuscar.add(nextStep.name());
         }
 
-        return etapaSagaRepositoryPort.buscarPorSolicitacaoIdETipos(requestId, etapasABuscar);
+        return etapaSagaRepositoryPort.buscarPorSagaIdETipos(sagaId, etapasABuscar);
     }
 
-    private void atualizarStatusDasEtapas(List<EtapaSaga> etapas, Map<TipoEtapaEnum, StatusEtapaEnum> regrasStatus) {
+    private void atualizarStatusDasEtapas(List<EtapaSaga> etapas, Map<TipoEtapaEnum, StatusEtapaEnum> regrasStatus, Saga saga) {
         for (EtapaSaga etapa : etapas) {
             TipoEtapaEnum tipo = TipoEtapaEnum.valueOf(etapa.getNomeEtapa());
             StatusEtapaEnum novoStatus = regrasStatus.get(tipo);
             if (novoStatus != null) {
                 etapa.setStatus(novoStatus);
             }
+            etapa.setSaga(saga);
         }
     }
 

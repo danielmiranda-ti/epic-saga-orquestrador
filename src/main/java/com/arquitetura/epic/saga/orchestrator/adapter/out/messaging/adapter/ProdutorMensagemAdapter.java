@@ -35,9 +35,9 @@ public class ProdutorMensagemAdapter implements ProdutorMensagemPort {
                             correlationId != null ? correlationId.getBytes() : new byte[0]);
 
                     kafkaTemplate.send(record);
-                    log.info("Mensagem enviada para o cliente: {} no tópico: {}", vendedorId, topico);
+                    log.info("=== Mensagem enviada para o vendedor: {} no tópico: {}", vendedorId, topico);
                 },
-                () -> log.warn("Etapa não encontrada. Mensagem não enviada para o tópico: {}", topico)
+                () -> log.warn("=== Etapa não encontrada. Mensagem não enviada para o tópico: {}", topico)
         );
     }
 

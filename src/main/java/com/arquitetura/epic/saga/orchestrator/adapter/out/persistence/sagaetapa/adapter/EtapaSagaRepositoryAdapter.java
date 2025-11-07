@@ -33,9 +33,8 @@ public class EtapaSagaRepositoryAdapter implements EtapaSagaRepositoryPort {
                 .map(mapper::toDomain);
     }
 
-    public List<EtapaSaga> buscarPorSolicitacaoIdETipos(String requestId, List<String> tipos) {
-        UUID solicitacaoUUID = UUID.fromString(requestId);
-        return sagaEtapaRepository.findBySaga_SolicitacaoIdAndNomeEtapaIn(solicitacaoUUID, tipos)
+    public List<EtapaSaga> buscarPorSagaIdETipos(UUID sagaId, List<String> tipos) {
+        return sagaEtapaRepository.findBySagaIdAndNomeEtapaIn(sagaId, tipos)
                 .stream()
                 .map(mapper::toDomain)
                 .collect(Collectors.toList());

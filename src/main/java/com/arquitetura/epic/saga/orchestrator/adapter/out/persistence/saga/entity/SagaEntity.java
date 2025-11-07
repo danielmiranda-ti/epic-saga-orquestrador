@@ -1,12 +1,9 @@
 package com.arquitetura.epic.saga.orchestrator.adapter.out.persistence.saga.entity;
 
-import com.arquitetura.epic.saga.orchestrator.adapter.out.persistence.sagaetapa.entity.EtapaSagaEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -36,10 +33,6 @@ public class SagaEntity {
 
     private LocalDateTime dataFim;
 
-    @Builder.Default
-    @OneToMany(mappedBy = "saga", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<EtapaSagaEntity> etapas = new ArrayList<>();
-
     // inicializa saga automaticamente em andamento
     @PrePersist
     public void prePersist() {
@@ -48,6 +41,9 @@ public class SagaEntity {
         }
         if (this.status == null) {
             this.status = SagaStatus.IN_PROGRESS;
+        }
+        if(this.dataFim == null && SagaStatus.SUCCESS.equals(this.status)) {
+            this.dataFim = LocalDateTime.now();
         }
     }
 }

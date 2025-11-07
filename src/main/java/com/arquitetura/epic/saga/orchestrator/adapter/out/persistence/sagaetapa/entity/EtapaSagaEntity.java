@@ -1,6 +1,5 @@
 package com.arquitetura.epic.saga.orchestrator.adapter.out.persistence.sagaetapa.entity;
 
-import com.arquitetura.epic.saga.orchestrator.adapter.out.persistence.saga.entity.SagaEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -19,11 +18,8 @@ public class EtapaSagaEntity {
     @GeneratedValue
     private UUID id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "saga_id", nullable = false)
-    @ToString.Exclude // evita loop no Lombok
-    @EqualsAndHashCode.Exclude
-    private SagaEntity saga;
+    private UUID sagaId;
 
     @Column(nullable = false)
     private String nomeEtapa;
